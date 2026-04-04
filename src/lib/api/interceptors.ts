@@ -32,7 +32,11 @@ export function setupInterceptors(axiosInstance: AxiosInstance) {
   axiosInstance.interceptors.response.use(
     (response) => response,
     async (error) => {
-      // Handle errors globally if needed
+      if (error.response?.status === 401) {
+        const locale = getLocaleFromCookie();
+        document.cookie = `access_token=; path=/; max-age=0`;
+        window.location.href = `/${locale}/login`;
+      }
       return Promise.reject(error);
     },
   );
