@@ -1,0 +1,50 @@
+{
+  "name": "my-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "ch:tr": "npx tsx scripts/check-translations.ts"
+  },
+  "dependencies": {
+    "@floating-ui/react": "^0.27.19",
+    "@hookform/resolvers": "^5.2.2",
+    "@tanstack/react-query": "^5.90.20",
+    "@tanstack/react-table": "^8.21.3",
+    "@types/nprogress": "^0.2.3",
+    "axios": "^1.13.4",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.554.0",
+    "next": "16.0.7",
+    "next-intl": "^4.5.8",
+    "nprogress": "^0.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-dropzone": "^15.0.0",
+    "react-hook-form": "^7.71.1",
+    "react-toastify": "^11.0.5",
+    "tailwind-merge": "^3.4.0",
+    "use-debounce": "^10.1.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "autoprefixer": "^10.4.22",
+    "eslint": "^9",
+    "eslint-config-next": "16.0.7",
+    "postcss": "^8.5.6",
+    "prettier": "^3.4.2",
+    "tailwindcss": "^3.4.18",
+    "tailwindcss-animate": "^1.0.7",
+    "tsx": "^4.21.0",
+    "typescript": "^5"
+  }
+}

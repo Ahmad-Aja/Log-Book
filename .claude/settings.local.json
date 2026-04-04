@@ -1,0 +1,39 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install)",
+      "Read(//c/Users/Ahmad_Ajajeh/Desktop/University-Workspace/almowasat-web-app/**)",
+      "Bash(ls -la \"c:\\\\Users\\\\Ahmad_Ajajeh\\\\Desktop\\\\University-Workspace\\\\almowasat-web-app\\\\src\\\\app\\\\[locale]\\\\dashboard\\\\medical-cases\"\" 2>/dev/null || echo \"Folder does not exist \")",
+      "Bash(ls /c/Users/Ahmad_Ajajeh/Desktop/University-Workspace/almowasat-web-app/src/app/[locale]/dashboard/)",
+      "Bash(mkdir -p \"/c/Users/Ahmad_Ajajeh/Desktop/University-Workspace/almowasat-web-app/src/app/[locale]/dashboard/medicine-categories\")",
+      "Bash(mkdir -p \"/c/Users/Ahmad_Ajajeh/Desktop/University-Workspace/almowasat-web-app/src/app/[locale]/dashboard/medicines\")",
+      "Bash(ls src/app/[locale]/dashboard/)",
+      "Bash(cat src/app/[locale]/dashboard/complaints/page.tsx)",
+      "Bash(find src/components/tables -name *.tsx)",
+      "Bash(node -e \"JSON.parse\\(require\\(''fs''\\).readFileSync\\(''src/dictionaries/en.json'',''utf8''\\)\\); console.log\\(''en.json valid''\\)\")",
+      "Bash(node -e \"JSON.parse\\(require\\(''fs''\\).readFileSync\\(''src/dictionaries/ar.json'',''utf8''\\)\\); console.log\\(''ar.json valid''\\)\")",
+      "Bash(grep -n \"Button\" src/app/[locale]/dashboard/announcements/page.tsx)",
+      "Bash(grep \"__Poppins\\\\|--font-poppins\" .next/static/css/*.css)",
+      "Bash(sed -n '48,65p' c:/Users/Ahmad_Ajajeh/Desktop/University-Workspace/almowasat-web-app/src/hooks/http/useStudents.ts)",
+      "Bash(sed -n '36,52p' c:/Users/Ahmad_Ajajeh/Desktop/University-Workspace/almowasat-web-app/src/hooks/http/useProcedures.ts)",
+      "Bash(sed -n '48,67p' c:/Users/Ahmad_Ajajeh/Desktop/University-Workspace/almowasat-web-app/src/hooks/http/useSupervisors.ts)",
+      "Bash(grep -n \"approvedCategories\\\\|AddMedicineModal\" c:/Users/Ahmad_Ajajeh/Desktop/University-Workspace/almowasat-web-app/src/app/[locale]/dashboard/medicines/page.tsx)",
+      "Bash(npm install:*)",
+      "WebSearch",
+      "WebFetch(domain:floating-ui.com)",
+      "WebFetch(domain:www.smashingmagazine.com)",
+      "Bash(node -e \"require\\('@floating-ui/react'\\); console.log\\('ok'\\)\")",
+      "Bash(npm run:*)",
+      "Bash(grep -n \"const .* = info\\\\.getValue\\(\\);\" src/components/tables/*.tsx)",
+      "Bash(sed -i 's/const status = info\\\\.getValue\\(\\);$/const status = info.getValue\\(\\) as MedicineCategoryStatus;/' src/components/tables/MedicineCategoryTable.tsx)",
+      "Bash(sed -i 's/const status = info\\\\.getValue\\(\\);$/const status = info.getValue\\(\\) as MedicineStatus;/' src/components/tables/MedicineTable.tsx)",
+      "Bash(sed -i 's/const status = info\\\\.getValue\\(\\);$/const status = info.getValue\\(\\) as ProtocolStatus;/' src/components/tables/ProtocolTable.tsx)",
+      "Bash(sed -i 's/const status = info\\\\.getValue\\(\\);$/const status = info.getValue\\(\\) as StudentProcedureStatus;/' src/components/tables/StudentProcedureTable.tsx)",
+      "Bash(sed -i 's/const date = info\\\\.getValue\\(\\);$/const date = info.getValue\\(\\) as string | undefined;/' src/components/tables/StudentTable.tsx)",
+      "Bash(node -e \"const z = require\\('zod'\\); console.log\\(z.ZodNativeEnum?.version || 'unknown'\\); const {version} = require\\('./node_modules/zod/package.json'\\); console.log\\(version\\)\")"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\Ahmad_Ajajeh\\Desktop\\University-Workspace\\almowasat-web-app\\src\\app\\[locale]\\dashboard"
+    ]
+  }
+}
