@@ -54,6 +54,18 @@ export interface ProtocolStudentInfo {
   fullName: string;
 }
 
+export interface ProtocolProcedure {
+  id: number;
+  arName: string;
+  enName: string;
+  arDescription: string | null;
+  enDescription: string | null;
+  minimumRequired: number;
+  createdAt: string;
+  updatedAt: string;
+  disabledAt: string | null;
+}
+
 export interface Protocol {
   id: number;
   arTitle: string;
@@ -62,6 +74,7 @@ export interface Protocol {
   enDescription: string | null;
   status: ProtocolStatus;
   procedureId: number;
+  procedure?: ProtocolProcedure;
   adminId: number | null;
   admin: ProtocolAdminInfo | null;
   studentId: number | null;

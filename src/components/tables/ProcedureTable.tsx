@@ -72,8 +72,9 @@ export function ProcedureTable({
   );
 
   // Modal states
-  const [selectedProcedure, setSelectedProcedure] =
-    useState<Procedure | null>(null);
+  const [selectedProcedure, setSelectedProcedure] = useState<Procedure | null>(
+    null,
+  );
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -149,7 +150,11 @@ export function ProcedureTable({
 
   // Filter handlers
   const handleApplyFilters = () => {
-    onFiltersChange({ nameSearch: localNameSearch, page: 1, limit: filters.limit });
+    onFiltersChange({
+      nameSearch: localNameSearch,
+      page: 1,
+      limit: filters.limit,
+    });
   };
 
   const handleClearFilters = () => {
@@ -162,14 +167,18 @@ export function ProcedureTable({
       columnHelper.accessor("arName", {
         header: t("arName"),
         cell: (info) => (
-          <span className="font-medium text-gray-900"><MixedText text={info.getValue()} /></span>
+          <div className="font-medium text-gray-900 max-w-[200px]">
+            <MixedText text={info.getValue()} truncate />
+          </div>
         ),
         size: 200,
       }),
       columnHelper.accessor("enName", {
         header: t("enName"),
         cell: (info) => (
-          <span className="font-medium text-gray-900"><MixedText text={info.getValue()} /></span>
+          <div className="font-medium text-gray-900 text-sm max-w-[200px]">
+            <MixedText text={info.getValue()} truncate />
+          </div>
         ),
         size: 200,
       }),

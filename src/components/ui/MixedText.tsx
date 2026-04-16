@@ -32,15 +32,18 @@ function splitMixed(text: string): Segment[] {
 interface MixedTextProps {
   text: string | null | undefined;
   className?: string;
+  truncate?: boolean;
 }
 
-export function MixedText({ text, className }: MixedTextProps) {
+export function MixedText({ text, className, truncate }: MixedTextProps) {
   if (!text) return null;
 
   const segments = splitMixed(text);
 
   return (
-    <span className={className}>
+    <span
+      className={`${truncate ? "block overflow-hidden whitespace-nowrap text-ellipsis" : ""} ${className ?? ""}`}
+    >
       {segments.map((seg, i) => (
         <span
           key={i}

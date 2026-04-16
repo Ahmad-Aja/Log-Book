@@ -118,14 +118,14 @@ export function EditProtocolModal({
           label={t("arDescription")}
           registration={register("arDescription")}
           error={errors.arDescription?.message}
-          rows={3}
+          rows={6}
           disabled={updateProtocolPending}
         />
         <TextareaField
           label={t("enDescription")}
           registration={register("enDescription")}
           error={errors.enDescription?.message}
-          rows={3}
+          rows={6}
           disabled={updateProtocolPending}
         />
       </div>

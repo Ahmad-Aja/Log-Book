@@ -105,7 +105,10 @@ export function MedicalCaseTable({
   const roleOptions = useMemo(
     () => [
       { value: MedicalCasePublisherRole.STUDENT, label: tRole("student") },
-      { value: MedicalCasePublisherRole.SUPERVISOR, label: tRole("supervisor") },
+      {
+        value: MedicalCasePublisherRole.SUPERVISOR,
+        label: tRole("supervisor"),
+      },
       { value: MedicalCasePublisherRole.ADMIN, label: tRole("admin") },
     ],
     [tRole],
@@ -165,9 +168,9 @@ export function MedicalCaseTable({
       columnHelper.accessor("title", {
         header: t("title"),
         cell: (info) => (
-          <span className="text-sm font-medium text-gray-900 line-clamp-2 max-w-[200px]">
+          <div className="text-sm font-medium text-gray-900 max-w-[300px]">
             <MixedText text={info.getValue() as string} />
-          </span>
+          </div>
         ),
         size: 200,
       }),
@@ -193,9 +196,7 @@ export function MedicalCaseTable({
             [MedicalCaseStatus.APPROVED]: tStatus("approved"),
             [MedicalCaseStatus.REJECTED]: tStatus("rejected"),
           }[status];
-          return (
-            <StatusBadge color={caseStatusColor[status]} label={label} />
-          );
+          return <StatusBadge color={caseStatusColor[status]} label={label} />;
         },
         size: 100,
       }),
@@ -359,7 +360,8 @@ export function MedicalCaseTable({
               onChange={(value) => {
                 const newFilters = {
                   ...localFilters,
-                  publisherRole: (value as MedicalCasePublisherRole) || undefined,
+                  publisherRole:
+                    (value as MedicalCasePublisherRole) || undefined,
                   page: 1,
                 };
                 setLocalFilters(newFilters);
@@ -450,10 +452,7 @@ export function MedicalCaseTable({
                       className="hover:bg-gray-50 transition-colors"
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <td
-                          key={cell.id}
-                          className="px-6 py-4 text-center"
-                        >
+                        <td key={cell.id} className="px-6 py-4 text-center">
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext(),

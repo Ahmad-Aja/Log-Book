@@ -108,9 +108,9 @@ export function AnnouncementTable({
       columnHelper.accessor("title", {
         header: t("title"),
         cell: (info) => (
-          <span className="text-sm font-medium text-gray-900 line-clamp-2 w-full min-w-[150px] text-center block">
-            <MixedText text={info.getValue() as string} />
-          </span>
+          <div className="text-sm font-medium text-gray-900 max-w-[350px]">
+            <MixedText text={info.getValue() as string} truncate />
+          </div>
         ),
         size: 220,
       }),

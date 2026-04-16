@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations, useLocale } from "next-intl";
 import { FormModal } from "@/components/ui/FormModal";
 import { FormField } from "@/components/forms/FormField";
+import { TextareaField } from "@/components/forms/TextareaField";
 import { StatusDropdown } from "@/components/ui/StatusDropdown";
 import { SearchSelect, SearchSelectOption } from "@/components/ui/SearchSelect";
 import { useUpdateMedicine } from "@/hooks/http/useMedicines";
@@ -30,10 +31,19 @@ function mapMedicineToFormData(medicine: Medicine): UpdateMedicineFormData {
     arName: medicine.arName,
     enName: medicine.enName,
     categoryId: medicine.categoryId,
-    status:
-      medicine.status === "PENDING"
-        ? undefined
-        : (medicine.status as "APPROVED" | "REJECTED"),
+    status: medicine.status === "PENDING" ? undefined : (medicine.status as "APPROVED" | "REJECTED"),
+    arDescription: medicine.arDescription ?? "",
+    enDescription: medicine.enDescription ?? "",
+    arIndications: medicine.arIndications ?? "",
+    enIndications: medicine.enIndications ?? "",
+    arAdministration: medicine.arAdministration ?? "",
+    enAdministration: medicine.enAdministration ?? "",
+    arContraindications: medicine.arContraindications ?? "",
+    enContraindications: medicine.enContraindications ?? "",
+    arMedicineDosages: medicine.arMedicineDosages ?? "",
+    enMedicineDosages: medicine.enMedicineDosages ?? "",
+    arNotes: medicine.arNotes ?? "",
+    enNotes: medicine.enNotes ?? "",
   };
 }
 
@@ -152,6 +162,30 @@ export function EditMedicineModal({
             allOptionLabel={t("statusKeep")}
             error={errors.status?.message}
           />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextareaField label={t("arDescription")} registration={register("arDescription")} disabled={updateMedicinePending} />
+          <TextareaField label={t("enDescription")} registration={register("enDescription")} disabled={updateMedicinePending} />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextareaField label={t("arIndications")} registration={register("arIndications")} disabled={updateMedicinePending} />
+          <TextareaField label={t("enIndications")} registration={register("enIndications")} disabled={updateMedicinePending} />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextareaField label={t("arAdministration")} registration={register("arAdministration")} disabled={updateMedicinePending} />
+          <TextareaField label={t("enAdministration")} registration={register("enAdministration")} disabled={updateMedicinePending} />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextareaField label={t("arContraindications")} registration={register("arContraindications")} disabled={updateMedicinePending} />
+          <TextareaField label={t("enContraindications")} registration={register("enContraindications")} disabled={updateMedicinePending} />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextareaField label={t("arMedicineDosages")} registration={register("arMedicineDosages")} disabled={updateMedicinePending} />
+          <TextareaField label={t("enMedicineDosages")} registration={register("enMedicineDosages")} disabled={updateMedicinePending} />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextareaField label={t("arNotes")} registration={register("arNotes")} disabled={updateMedicinePending} />
+          <TextareaField label={t("enNotes")} registration={register("enNotes")} disabled={updateMedicinePending} />
         </div>
       </div>
     </FormModal>

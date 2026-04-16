@@ -2,8 +2,6 @@ import { NextResponse, NextRequest } from "next/server";
 import createMiddleware from "next-intl/middleware";
 import { locales, defaultLocale } from "@/utils/locale";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
 // Create the i18n middleware
 const intlMiddleware = createMiddleware({
   locales,
@@ -31,51 +29,36 @@ function extractLocale(pathname: string): string {
   return match ? match[1] : defaultLocale;
 }
 
-// Validate token by calling /admins/me
-async function validateToken(token: string): Promise<boolean> {
+function isTokenExpired(token: string): boolean {
   try {
-    const response = await fetch(`${API_URL}/admins/me`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.ok;
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    return payload.exp * 1000 < Date.now();
   } catch {
-    return false;
+    return true;
   }
 }
 
-export async function proxy(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const locale = extractLocale(pathname);
   const accessToken = request.cookies.get("access_token")?.value;
 
   // Handle public routes (login)
   if (isPublicRoute(pathname)) {
-    if (accessToken) {
-      const isValid = await validateToken(accessToken);
-      if (isValid) {
-        return NextResponse.redirect(
-          new URL(`/${locale}/dashboard`, request.url),
-        );
-      }
+    if (accessToken && !isTokenExpired(accessToken)) {
+      return NextResponse.redirect(
+        new URL(`/${locale}/dashboard`, request.url),
+      );
     }
     return intlMiddleware(request);
   }
 
   // All other routes are protected
-  if (!accessToken) {
-    return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
-  }
-
-  const isValid = await validateToken(accessToken);
-  if (!isValid) {
-    // Clear invalid token
+  if (!accessToken || isTokenExpired(accessToken)) {
     const response = NextResponse.redirect(
       new URL(`/${locale}/login`, request.url),
     );
-    response.cookies.delete("access_token");
+    response.cookies.set("access_token", "", { path: "/", maxAge: 0 });
     return response;
   }
 

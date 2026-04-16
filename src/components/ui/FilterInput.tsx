@@ -17,7 +17,7 @@ export function FilterInput({
 }: FilterInputProps) {
   return (
     <div className="group/filter-input">
-      <label className="text-[13px] group-focus-within/filter-input:text-forest-light text-wheat mb-1 block transition-colors duration-300">
+      <label className="text-[11px] sm:text-[13px] group-focus-within/filter-input:text-forest-light text-wheat mb-1 block transition-colors duration-300">
         {label}
       </label>
       <input
@@ -26,7 +26,7 @@ export function FilterInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && onEnter?.()}
-        className="w-full px-3 py-2 border border-wheat hover:border-wheat-dark focus:border-forest-light rounded-md text-[15px] transition-shadow duration-300 focus:outline-none focus:ring-1 focus:ring-forest-light bg-white placeholder:text-gray-400"
+        className="w-full px-3 py-1.5 sm:py-2 border border-wheat hover:border-wheat-dark focus:border-forest-light rounded-md text-sm sm:text-[15px] transition-shadow duration-300 focus:outline-none focus:ring-1 focus:ring-forest-light bg-white placeholder:text-gray-400"
       />
     </div>
   );

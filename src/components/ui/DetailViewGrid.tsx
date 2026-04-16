@@ -31,7 +31,7 @@ export function DetailViewGrid({
   fields,
 }: DetailViewGridProps) {
   return (
-    <div className="p-6">
+    <div className="p-2 sm:p-4">
       <div className="flex flex-col md:flex-row gap-6">
         {/* Image - Left Side (only if showImage is true) */}
         {showImage && (

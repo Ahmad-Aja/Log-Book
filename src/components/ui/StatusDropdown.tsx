@@ -56,7 +56,7 @@ export function StatusDropdown({
   return (
     <div ref={wrapperRef} className="w-full relative group/status-dropdown">
       {label && (
-        <label className="text-[13px] text-wheat mb-1 block transition-colors duration-300 group-focus-within/status-dropdown:text-forest-light">
+        <label className="text-[11px] sm:text-[13px] text-wheat mb-1 block transition-colors duration-300 group-focus-within/status-dropdown:text-forest-light">
           {label}
         </label>
       )}
@@ -64,7 +64,7 @@ export function StatusDropdown({
         type="button"
         onClick={() => !disabled && setIsOpen((o) => !o)}
         disabled={disabled}
-        className={`w-full px-3 py-2 border rounded-md text-[15px] transition-all duration-300 flex items-center justify-between ${
+        className={`w-full px-3 py-1.5 sm:py-2 border rounded-md text-sm sm:text-[15px] transition-all duration-300 flex items-center justify-between ${
           error
             ? "border-red-500 hover:border-red-600"
             : "border-wheat hover:border-wheat-dark focus:border-forest-light"
@@ -86,7 +86,7 @@ export function StatusDropdown({
             <button
               type="button"
               onClick={() => handleSelect("")}
-              className="w-full px-3 py-2 text-start text-[15px] text-gray-900 hover:bg-forest-light/50 transition-colors flex items-center justify-between"
+              className="w-full px-3 py-1.5 sm:py-2 text-start text-sm sm:text-[15px] text-gray-900 hover:bg-forest-light/50 transition-colors flex items-center justify-between"
             >
               {allOptionLabel}
               {value === "" && <Check className="w-4 h-4 text-forest shrink-0" />}

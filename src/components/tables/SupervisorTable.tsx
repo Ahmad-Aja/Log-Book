@@ -176,7 +176,9 @@ export function SupervisorTable({
       columnHelper.accessor("fullName", {
         header: t("fullName"),
         cell: (info) => (
-          <span className="font-medium text-gray-900"><MixedText text={info.getValue()} /></span>
+          <div className="font-medium text-gray-900 max-w-[200px]">
+            <MixedText text={info.getValue()} truncate />
+          </div>
         ),
         size: 200,
       }),

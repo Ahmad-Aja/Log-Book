@@ -32,6 +32,7 @@ export interface CreateMedicalCaseDto {
   description: string;
   caseDate: string;
   hospital?: string;
+  images?: string[];
   urls?: string[];
   contributors?: string[];
 }
@@ -41,6 +42,7 @@ export interface UpdateMedicalCaseDto {
   description?: string;
   caseDate?: string;
   hospital?: string;
+  images?: string[];
   urls?: string[];
   contributors?: string[];
 }

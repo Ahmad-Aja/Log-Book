@@ -91,29 +91,35 @@ export function EditStudentProcedureModal({
           label={t("status")}
           placeholder={t("statusPlaceholder")}
           value={currentStatus ?? ""}
-          onChange={(val) =>
-            setValue("status", (val as "APPROVED" | "REJECTED") || undefined)
-          }
+          onChange={(val) => {
+            const newStatus = (val as "APPROVED" | "REJECTED") || undefined;
+            setValue("status", newStatus);
+            // Score must be absent for non-APPROVED statuses
+            if (newStatus !== "APPROVED") {
+              setValue("evaluationScore", undefined);
+            }
+          }}
           options={statusOptions}
           showAllOption={true}
           allOptionLabel={t("statusKeep")}
           error={errors.status?.message}
         />
-        <StatusDropdown
-          label={t("evaluationScore")}
-          placeholder={t("evaluationScorePlaceholder")}
-          value={currentScore !== undefined ? String(currentScore) : ""}
-          onChange={(val) =>
-            setValue(
-              "evaluationScore",
-              val ? (Number(val) as unknown as undefined) : undefined,
-            )
-          }
-          options={scoreOptions}
-          showAllOption={true}
-          allOptionLabel={t("scoreKeep")}
-          error={errors.evaluationScore?.message}
-        />
+        {currentStatus === "APPROVED" && (
+          <StatusDropdown
+            label={t("evaluationScore")}
+            placeholder={t("evaluationScorePlaceholder")}
+            value={currentScore !== undefined ? String(currentScore) : ""}
+            onChange={(val) =>
+              setValue(
+                "evaluationScore",
+                val ? (Number(val) as unknown as undefined) : undefined,
+              )
+            }
+            options={scoreOptions}
+            showAllOption={false}
+            error={errors.evaluationScore?.message}
+          />
+        )}
         <div className="md:col-span-2">
           <TextareaField
             label={t("supervisorNote")}

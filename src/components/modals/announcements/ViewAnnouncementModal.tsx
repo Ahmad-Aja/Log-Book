@@ -18,23 +18,6 @@ interface ViewAnnouncementModalProps {
   announcement: Announcement | null;
 }
 
-function Section({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="rounded-lg border border-gray-200 overflow-hidden">
-      <div className="bg-gray-50 px-4 py-2.5 border-b border-gray-200">
-        <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
-      </div>
-      {children}
-    </div>
-  );
-}
-
 export function ViewAnnouncementModal({
   isOpen,
   onClose,
@@ -60,52 +43,34 @@ export function ViewAnnouncementModal({
     >
       <ModalHeader title={tModal("viewTitle")} onClose={onClose} sticky />
 
-      <div className="overflow-y-auto flex-1 p-6 space-y-4">
-        {/* Meta Info */}
-        <Section title={t("title")}>
-          <DetailViewGrid
-            fields={[
-              {
-                label: t("id"),
-                value: (
-                  <span className="font-mono">#{announcement.id}</span>
-                ),
-              },
-              { label: t("type"), value: announcement.type },
-              { label: t("targetAudience"), value: audienceLabel },
-              {
-                label: t("createdBy"),
-                value: <MixedText text={announcement.createdBy?.fullName ?? "—"} />,
-              },
-              {
-                label: t("createdAt"),
-                value: new Date(announcement.createdAt).toLocaleDateString(),
-              },
-              {
-                label: t("updatedAt"),
-                value: new Date(announcement.updatedAt).toLocaleDateString(),
-              },
-            ]}
-          />
-        </Section>
-
-        {/* Title */}
-        <Section title={t("title")}>
-          <div className="p-4">
-            <p className="text-sm font-semibold text-gray-900">
-              <MixedText text={announcement.title} />
-            </p>
-          </div>
-        </Section>
-
-        {/* Content */}
-        <Section title={t("content")}>
-          <div className="p-4">
-            <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
-              <MixedText text={announcement.content} />
-            </p>
-          </div>
-        </Section>
+      <div className="overflow-y-auto flex-1 p-2 space-y-4">
+        <DetailViewGrid
+          fields={[
+            { label: t("type"), value: <MixedText text={announcement.type} /> },
+            { label: t("targetAudience"), value: audienceLabel },
+            {
+              label: t("createdBy"),
+              value: (
+                <MixedText text={announcement.createdBy?.fullName ?? "—"} />
+              ),
+              colSpan: 2,
+            },
+            {
+              label: t("title"),
+              value: <MixedText text={announcement.title} />,
+              colSpan: 2,
+              multiline: true,
+              clamp: false,
+            },
+            {
+              label: t("content"),
+              value: <MixedText text={announcement.content} />,
+              colSpan: 2,
+              multiline: true,
+              clamp: false,
+            },
+          ]}
+        />
       </div>
 
       <ModalFooter>

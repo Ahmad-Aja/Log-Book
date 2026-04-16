@@ -36,13 +36,26 @@ export function ViewMedicineModal({
     [MedicineStatus.REJECTED]: tStatus("rejected"),
   };
 
+  const isAr = locale === "ar";
+
+  const localizedOptional = (
+    label: string,
+    arValue: string | null,
+    enValue: string | null,
+    colSpan?: 2,
+    multiline?: boolean,
+  ) => {
+    const value = isAr ? arValue : enValue;
+    return value ? [{ label, value: <MixedText text={value} />, colSpan, multiline, clamp: false }] : [];
+  };
+
   const fields = [
     { label: tModal("arName"), value: <MixedText text={medicine.arName} /> },
     { label: tModal("enName"), value: <MixedText text={medicine.enName} /> },
     {
       label: tModal("category"),
       value: (
-        <MixedText text={locale === "ar" ? medicine.category.arName : medicine.category.enName} />
+        <MixedText text={isAr ? medicine.category.arName : medicine.category.enName} />
       ),
     },
     {
@@ -55,24 +68,12 @@ export function ViewMedicineModal({
         />
       ),
     },
-    ...(medicine.arDescription
-      ? [
-          {
-            label: tModal("arDescription"),
-            value: <MixedText text={medicine.arDescription} />,
-            colSpan: 2 as const,
-          },
-        ]
-      : []),
-    ...(medicine.enDescription
-      ? [
-          {
-            label: tModal("enDescription"),
-            value: <MixedText text={medicine.enDescription} />,
-            colSpan: 2 as const,
-          },
-        ]
-      : []),
+    ...localizedOptional(tModal("description"), medicine.arDescription, medicine.enDescription, 2, true),
+    ...localizedOptional(tModal("indications"), medicine.arIndications, medicine.enIndications, 2, true),
+    ...localizedOptional(tModal("administration"), medicine.arAdministration, medicine.enAdministration, 2, true),
+    ...localizedOptional(tModal("contraindications"), medicine.arContraindications, medicine.enContraindications, 2, true),
+    ...localizedOptional(tModal("medicineDosages"), medicine.arMedicineDosages, medicine.enMedicineDosages, 2, true),
+    ...localizedOptional(tModal("notes"), medicine.arNotes, medicine.enNotes, 2, true),
   ];
 
   return (

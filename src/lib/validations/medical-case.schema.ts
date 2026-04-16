@@ -16,10 +16,7 @@ export const createMedicalCaseSchema = (
     hospital: z
       .string()
       .min(3, t("minLength", { min: 3 }))
-      .max(255, t("maxLength", { max: 255 }))
-      .optional()
-      .or(z.literal(""))
-      .transform((v) => (v === "" ? undefined : v)),
+      .max(255, t("maxLength", { max: 255 })),
   });
 
 export type CreateMedicalCaseFormData = z.infer<

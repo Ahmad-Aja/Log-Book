@@ -30,7 +30,8 @@
       "Bash(sed -i 's/const status = info\\\\.getValue\\(\\);$/const status = info.getValue\\(\\) as ProtocolStatus;/' src/components/tables/ProtocolTable.tsx)",
       "Bash(sed -i 's/const status = info\\\\.getValue\\(\\);$/const status = info.getValue\\(\\) as StudentProcedureStatus;/' src/components/tables/StudentProcedureTable.tsx)",
       "Bash(sed -i 's/const date = info\\\\.getValue\\(\\);$/const date = info.getValue\\(\\) as string | undefined;/' src/components/tables/StudentTable.tsx)",
-      "Bash(node -e \"const z = require\\('zod'\\); console.log\\(z.ZodNativeEnum?.version || 'unknown'\\); const {version} = require\\('./node_modules/zod/package.json'\\); console.log\\(version\\)\")"
+      "Bash(node -e \"const z = require\\('zod'\\); console.log\\(z.ZodNativeEnum?.version || 'unknown'\\); const {version} = require\\('./node_modules/zod/package.json'\\); console.log\\(version\\)\")",
+      "Bash(grep -E \"\\\\.tsx$\")"
     ],
     "additionalDirectories": [
       "C:\\Users\\Ahmad_Ajajeh\\Desktop\\University-Workspace\\almowasat-web-app\\src\\app\\[locale]\\dashboard"

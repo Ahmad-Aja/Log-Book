@@ -29,6 +29,7 @@ import { Button } from "@/components/ui/Button";
 import { FilterInput } from "@/components/ui/FilterInput";
 import { MixedText } from "@/components/ui/MixedText";
 import { StatusDropdown } from "@/components/ui/StatusDropdown";
+import { SearchSelect, SearchSelectOption } from "@/components/ui/SearchSelect";
 import { StatusBadge, StatusBadgeColor } from "@/components/ui/StatusBadge";
 import { ViewMedicineModal } from "@/components/modals/medicines/ViewMedicineModal";
 import { EditMedicineModal } from "@/components/modals/medicines/EditMedicineModal";
@@ -98,14 +99,23 @@ export function MedicineTable({
     [tStatus],
   );
 
-  const categoryOptions = useMemo(
-    () =>
-      approvedCategories.map((c) => ({
-        value: String(c.id),
+  const [categorySearch, setCategorySearch] = useState("");
+
+  const categoryOptions = useMemo<SearchSelectOption[]>(() => {
+    const query = categorySearch.toLowerCase();
+    return approvedCategories
+      .filter((c) =>
+        query
+          ? c.arName.toLowerCase().includes(query) ||
+            c.enName.toLowerCase().includes(query)
+          : true,
+      )
+      .map((c) => ({
+        value: c.id,
         label: locale === "ar" ? c.arName : c.enName,
-      })),
-    [approvedCategories, locale],
-  );
+        sublabel: locale === "ar" ? c.enName : c.arName,
+      }));
+  }, [approvedCategories, locale, categorySearch]);
 
   const handleApplyFilters = () => {
     onFiltersChange({ ...localFilters, page: 1 });
@@ -138,11 +148,11 @@ export function MedicineTable({
           const name = locale === "ar" ? record.arName : record.enName;
           const subName = locale === "ar" ? record.enName : record.arName;
           return (
-            <div className="w-full min-w-[100px] text-center">
-              <p className="text-sm font-medium text-gray-900 line-clamp-1">
+            <div className="w-full min-w-[100px]">
+              <p className="text-sm font-medium text-gray-900 overflow-hidden whitespace-nowrap text-ellipsis">
                 <MixedText text={name} />
               </p>
-              <p className="text-xs text-gray-500 line-clamp-1">
+              <p className="text-xs text-gray-500 overflow-hidden whitespace-nowrap text-ellipsis">
                 <MixedText text={subName} />
               </p>
             </div>
@@ -252,12 +262,11 @@ export function MedicineTable({
               }
               onEnter={handleApplyFilters}
             />
-            <StatusDropdown
+            <SearchSelect
               label={t("categoryLabel")}
               placeholder={t("categoryPlaceholder")}
-              value={
-                localFilters.categoryId ? String(localFilters.categoryId) : ""
-              }
+              searchPlaceholder={t("categorySearchPlaceholder")}
+              value={localFilters.categoryId ?? null}
               onChange={(value) => {
                 const newFilters = {
                   ...localFilters,
@@ -268,8 +277,7 @@ export function MedicineTable({
                 onFiltersChange(newFilters);
               }}
               options={categoryOptions}
-              showAllOption
-              allOptionLabel={t("categoryAll")}
+              onSearch={setCategorySearch}
             />
             <StatusDropdown
               label={t("statusLabel")}

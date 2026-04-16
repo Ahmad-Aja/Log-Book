@@ -121,16 +121,18 @@ export function MedicineCategoryTable({
       columnHelper.accessor("arName", {
         header: t("arName"),
         cell: (info) => (
-          <span className="text-sm font-medium text-gray-900 block text-center">
-            <MixedText text={info.getValue() as string} />
-          </span>
+          <div className="text-sm font-medium text-gray-900 max-w-[300px]">
+            <MixedText text={info.getValue() as string} truncate />
+          </div>
         ),
         size: 180,
       }),
       columnHelper.accessor("enName", {
         header: t("enName"),
         cell: (info) => (
-          <span className="text-sm text-gray-700"><MixedText text={info.getValue() as string} /></span>
+          <div className="text-sm text-gray-700 max-w-[300px]">
+            <MixedText text={info.getValue() as string} truncate />
+          </div>
         ),
         size: 180,
       }),

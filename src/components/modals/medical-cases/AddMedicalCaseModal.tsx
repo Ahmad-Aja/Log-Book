@@ -8,7 +8,8 @@ import { X, Plus } from "lucide-react";
 import { FormModal } from "@/components/ui/FormModal";
 import { FormField } from "@/components/forms/FormField";
 import { TextareaField } from "@/components/forms/TextareaField";
-import { useCreateMedicalCase } from "@/hooks/http/useMedicalCases";
+import { MultiImageUpload, ImageEntry } from "@/components/ui/MultiImageUpload";
+import { useCreateMedicalCase, useUploadMedicalCaseImages } from "@/hooks/http/useMedicalCases";
 import {
   createMedicalCaseSchema,
   CreateMedicalCaseFormData,
@@ -28,14 +29,15 @@ export function AddMedicalCaseModal({
   const t = useTranslations("medicalCases.modal");
   const tValidation = useTranslations("validation");
 
+  const [imageEntries, setImageEntries] = useState<ImageEntry[]>([]);
   const [urls, setUrls] = useState<string[]>([]);
   const [urlInput, setUrlInput] = useState("");
   const [urlError, setUrlError] = useState("");
   const [contributors, setContributors] = useState<string[]>([]);
   const [contributorInput, setContributorInput] = useState("");
 
-  const { createMedicalCaseMutate, createMedicalCasePending } =
-    useCreateMedicalCase();
+  const { createMedicalCaseMutate, createMedicalCasePending } = useCreateMedicalCase();
+  const { uploadImagesMutateAsync, uploadImagesPending } = useUploadMedicalCaseImages();
 
   const {
     register,
@@ -50,6 +52,7 @@ export function AddMedicalCaseModal({
   useEffect(() => {
     if (isOpen) {
       reset();
+      setImageEntries([]);
       setUrls([]);
       setUrlInput("");
       setUrlError("");
@@ -89,13 +92,23 @@ export function AddMedicalCaseModal({
     }
   };
 
-  const handleFormSubmit = (data: CreateMedicalCaseFormData) => {
+  const handleFormSubmit = async (data: CreateMedicalCaseFormData) => {
+    let imageUrls: string[] = [];
+    const newFiles = imageEntries.filter((e) => e.file).map((e) => e.file!);
+    if (newFiles.length > 0) {
+      try {
+        imageUrls = await uploadImagesMutateAsync(newFiles);
+      } catch {
+        return;
+      }
+    }
     createMedicalCaseMutate(
       {
         title: data.title,
         description: data.description,
         caseDate: data.caseDate,
-        hospital: data.hospital || undefined,
+        hospital: data.hospital,
+        images: imageUrls.length > 0 ? imageUrls : undefined,
         urls: urls.length > 0 ? urls : undefined,
         contributors: contributors.length > 0 ? contributors : undefined,
       },
@@ -109,9 +122,9 @@ export function AddMedicalCaseModal({
       onClose={onClose}
       onSubmit={handleSubmit(handleFormSubmit)}
       title={t("addTitle")}
-      submitText={createMedicalCasePending ? t("adding") : t("add")}
+      submitText={createMedicalCasePending || uploadImagesPending ? t("adding") : t("add")}
       cancelText={t("cancel")}
-      isLoading={createMedicalCasePending}
+      isLoading={createMedicalCasePending || uploadImagesPending}
     >
       <div className="space-y-4">
         <FormField
@@ -139,6 +152,16 @@ export function AddMedicalCaseModal({
             placeholder={t("hospitalPlaceholder")}
             error={errors.hospital?.message}
             registration={register("hospital")}
+          />
+        </div>
+
+        {/* Images */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">{t("images")}</label>
+          <MultiImageUpload
+            entries={imageEntries}
+            onChange={setImageEntries}
+            disabled={createMedicalCasePending || uploadImagesPending}
           />
         </div>
 

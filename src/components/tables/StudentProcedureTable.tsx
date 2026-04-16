@@ -152,8 +152,8 @@ export function StudentProcedureTable({
         id: "student",
         header: t("student"),
         cell: (info) => (
-          <div className="text-sm">
-            <div className="font-medium text-gray-900"><MixedText text={info.getValue() as string} /></div>
+          <div className="text-sm max-w-[180px]">
+            <MixedText text={info.getValue() as string} truncate className="font-medium text-gray-900" />
             <div className="text-gray-500 text-xs">
               {info.row.original.student.universityId}
             </div>
@@ -167,9 +167,9 @@ export function StudentProcedureTable({
           id: "procedure",
           header: t("procedure"),
           cell: (info) => (
-            <span className="text-sm font-medium text-gray-900">
-              <MixedText text={info.getValue() as string} />
-            </span>
+            <div className="text-sm font-medium text-gray-900 max-w-[160px]">
+              <MixedText text={info.getValue() as string} truncate />
+            </div>
           ),
           size: 160,
         },
@@ -178,7 +178,9 @@ export function StudentProcedureTable({
         id: "supervisor",
         header: t("supervisor"),
         cell: (info) => (
-          <span className="text-sm text-gray-700"><MixedText text={info.getValue() as string} /></span>
+          <div className="text-sm text-gray-700 max-w-[150px]">
+            <MixedText text={info.getValue() as string} truncate />
+          </div>
         ),
         size: 150,
       }),

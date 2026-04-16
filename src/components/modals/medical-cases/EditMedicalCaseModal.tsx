@@ -8,7 +8,8 @@ import { X, Plus } from "lucide-react";
 import { FormModal } from "@/components/ui/FormModal";
 import { FormField } from "@/components/forms/FormField";
 import { TextareaField } from "@/components/forms/TextareaField";
-import { useUpdateMedicalCase } from "@/hooks/http/useMedicalCases";
+import { MultiImageUpload, ImageEntry } from "@/components/ui/MultiImageUpload";
+import { useUpdateMedicalCase, useUploadMedicalCaseImages } from "@/hooks/http/useMedicalCases";
 import {
   updateMedicalCaseSchema,
   UpdateMedicalCaseFormData,
@@ -43,14 +44,15 @@ export function EditMedicalCaseModal({
   const t = useTranslations("medicalCases.modal");
   const tValidation = useTranslations("validation");
 
+  const [imageEntries, setImageEntries] = useState<ImageEntry[]>([]);
   const [urls, setUrls] = useState<string[]>([]);
   const [urlInput, setUrlInput] = useState("");
   const [urlError, setUrlError] = useState("");
   const [contributors, setContributors] = useState<string[]>([]);
   const [contributorInput, setContributorInput] = useState("");
 
-  const { updateMedicalCaseMutate, updateMedicalCasePending } =
-    useUpdateMedicalCase();
+  const { updateMedicalCaseMutate, updateMedicalCasePending } = useUpdateMedicalCase();
+  const { uploadImagesMutateAsync, uploadImagesPending } = useUploadMedicalCaseImages();
 
   const {
     register,
@@ -64,6 +66,7 @@ export function EditMedicalCaseModal({
   useEffect(() => {
     if (isOpen && medicalCase) {
       reset(mapMedicalCaseToFormData(medicalCase));
+      setImageEntries((medicalCase.images ?? []).map((stored) => ({ stored })));
       setUrls(medicalCase.urls ?? []);
       setUrlInput("");
       setUrlError("");
@@ -103,8 +106,18 @@ export function EditMedicalCaseModal({
     }
   };
 
-  const handleFormSubmit = (data: UpdateMedicalCaseFormData) => {
+  const handleFormSubmit = async (data: UpdateMedicalCaseFormData) => {
     if (!medicalCase) return;
+    const existingUrls = imageEntries.filter((e) => e.stored).map((e) => e.stored!);
+    const newFiles = imageEntries.filter((e) => e.file).map((e) => e.file!);
+    let uploadedUrls: string[] = [];
+    if (newFiles.length > 0) {
+      try {
+        uploadedUrls = await uploadImagesMutateAsync(newFiles);
+      } catch {
+        return;
+      }
+    }
     updateMedicalCaseMutate(
       {
         id: medicalCase.id,
@@ -113,6 +126,7 @@ export function EditMedicalCaseModal({
           description: data.description,
           caseDate: data.caseDate,
           hospital: data.hospital || undefined,
+          images: [...existingUrls, ...uploadedUrls],
           urls,
           contributors,
         },
@@ -129,9 +143,9 @@ export function EditMedicalCaseModal({
       onClose={onClose}
       onSubmit={handleSubmit(handleFormSubmit)}
       title={t("editTitle")}
-      submitText={updateMedicalCasePending ? t("saving") : t("save")}
+      submitText={updateMedicalCasePending || uploadImagesPending ? t("saving") : t("save")}
       cancelText={t("cancel")}
-      isLoading={updateMedicalCasePending}
+      isLoading={updateMedicalCasePending || uploadImagesPending}
     >
       <div className="space-y-4">
         <FormField
@@ -159,6 +173,16 @@ export function EditMedicalCaseModal({
             placeholder={t("hospitalPlaceholder")}
             error={errors.hospital?.message}
             registration={register("hospital")}
+          />
+        </div>
+
+        {/* Images */}
+        <div className="space-y-2">
+          <label className="block text-sm font-medium text-gray-700">{t("images")}</label>
+          <MultiImageUpload
+            entries={imageEntries}
+            onChange={setImageEntries}
+            disabled={updateMedicalCasePending || uploadImagesPending}
           />
         </div>
 

@@ -106,10 +106,16 @@ export function ViewVolunteerActivityModal({
               {
                 label: t("arTitle"),
                 value: <MixedText text={activity.arTitle} />,
+                colSpan: 2,
+                multiline: true,
+                clamp: false,
               },
               {
                 label: t("enTitle"),
                 value: <MixedText text={activity.enTitle} />,
+                colSpan: 2,
+                multiline: true,
+                clamp: false,
               },
               {
                 label: t("arDescription"),

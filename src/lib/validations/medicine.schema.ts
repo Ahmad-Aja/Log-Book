@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+const optionalText = (t: (key: string, opts?: any) => string) =>
+  z.string().max(2000, t("maxLength", { max: 2000 })).optional();
+
 export const createMedicineSchema = (
   t: (key: string, opts?: any) => string,
 ) =>
@@ -15,6 +18,18 @@ export const createMedicineSchema = (
     categoryId: z
       .number({ error: t("required") })
       .min(1, t("required")),
+    arDescription: optionalText(t),
+    enDescription: optionalText(t),
+    arIndications: optionalText(t),
+    enIndications: optionalText(t),
+    arAdministration: optionalText(t),
+    enAdministration: optionalText(t),
+    arContraindications: optionalText(t),
+    enContraindications: optionalText(t),
+    arMedicineDosages: optionalText(t),
+    enMedicineDosages: optionalText(t),
+    arNotes: optionalText(t),
+    enNotes: optionalText(t),
   });
 
 export type CreateMedicineFormData = z.infer<
@@ -24,18 +39,7 @@ export type CreateMedicineFormData = z.infer<
 export const updateMedicineSchema = (
   t: (key: string, opts?: any) => string,
 ) =>
-  z.object({
-    arName: z
-      .string()
-      .min(1, t("required"))
-      .max(255, t("maxLength", { max: 255 }))
-      .optional(),
-    enName: z
-      .string()
-      .min(1, t("required"))
-      .max(255, t("maxLength", { max: 255 }))
-      .optional(),
-    categoryId: z.number().min(1, t("required")).optional(),
+  createMedicineSchema(t).partial().extend({
     status: z.enum(["APPROVED", "REJECTED"]).optional(),
   });
 

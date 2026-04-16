@@ -50,7 +50,11 @@ function MedicineRow({
   med: CreateProtocolMedicineInput;
   index: number;
   onRemove: (i: number) => void;
-  onChange: (i: number, field: keyof CreateProtocolMedicineInput, value: string | number) => void;
+  onChange: (
+    i: number,
+    field: keyof CreateProtocolMedicineInput,
+    value: string | number,
+  ) => void;
   t: (key: string) => string;
   locale: string;
 }) {
@@ -127,7 +131,9 @@ export function AddProtocolModal({ isOpen, onClose }: AddProtocolModalProps) {
   const { createProtocolMutate, createProtocolPending } = useCreateProtocol();
 
   const [inlineSteps, setInlineSteps] = useState<CreateProtocolStepInput[]>([]);
-  const [inlineMedicines, setInlineMedicines] = useState<CreateProtocolMedicineInput[]>([]);
+  const [inlineMedicines, setInlineMedicines] = useState<
+    CreateProtocolMedicineInput[]
+  >([]);
 
   const [procedureSearch, setProcedureSearch] = useState("");
   const [procedureLimit, setProcedureLimit] = useState(PAGE_SIZE);
@@ -254,7 +260,10 @@ export function AddProtocolModal({ isOpen, onClose }: AddProtocolModalProps) {
           searchPlaceholder={t("searchProcedurePlaceholder")}
           value={currentProcedureId ?? null}
           onChange={(val) =>
-            setValue("procedureId", val ? Number(val) : (undefined as unknown as number))
+            setValue(
+              "procedureId",
+              val ? Number(val) : (undefined as unknown as number),
+            )
           }
           options={procedureOptions}
           onSearch={setProcedureSearch}
@@ -266,13 +275,13 @@ export function AddProtocolModal({ isOpen, onClose }: AddProtocolModalProps) {
         <TextareaField
           label={t("arDescription")}
           registration={register("arDescription")}
-          rows={2}
+          rows={6}
           disabled={createProtocolPending}
         />
         <TextareaField
           label={t("enDescription")}
           registration={register("enDescription")}
-          rows={2}
+          rows={6}
           disabled={createProtocolPending}
         />
 
@@ -312,7 +321,11 @@ export function AddProtocolModal({ isOpen, onClose }: AddProtocolModalProps) {
                     type="number"
                     value={step.stepNumber}
                     onChange={(e) =>
-                      handleStepChange(index, "stepNumber", Number(e.target.value))
+                      handleStepChange(
+                        index,
+                        "stepNumber",
+                        Number(e.target.value),
+                      )
                     }
                     className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:outline-none focus:border-wheat"
                     min={1}

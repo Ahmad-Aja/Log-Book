@@ -1039,6 +1039,20 @@ toast.dismiss(id);
 
 ---
 
+## Backend Spec / DTO Handling Rule
+
+When receiving a backend response shape (DTO, API doc, or sample JSON) as a spec to implement a feature:
+
+1. **Add every field to the TypeScript type** — never leave backend fields untyped. Optional fields use `field: Type | null`.
+2. **Display every field in the view modal** — use `DetailViewSlot` (or the fields array pattern in `DetailViewModal`). Conditional fields (nullable) are shown only when non-null.
+3. **Include every writable field in the add and edit modals** — add the field to the Zod schema, the DTO interface, the `mapEntityToFormData` mapper, and render it as a `FormField` in the form. Do not submit a subset of fields; pass the full form data object to the mutate call.
+4. **Bilingual fields (arX / enX pairs) in forms** — always render both `arX` and `enX` fields side-by-side in a `grid grid-cols-2` row so the user can fill both languages at once.
+5. **Bilingual fields in view modals** — show both AR and EN only for the entity's primary name fields. All other bilingual fields show a single row using the active locale value (`locale === "ar" ? arX : enX`), hidden when both are null.
+6. **Add translation keys for every new field** in both `en.json` and `ar.json` under the appropriate domain namespace. For bilingual form fields use `arX`/`enX`-prefixed keys (e.g. `"arIndications": "Indications (AR)"`); for locale-aware view fields use a single neutral key (e.g. `"indications": "Indications"`).
+7. Do not silently discard fields — if a field is received from the backend and not shown anywhere, that is a bug.
+
+---
+
 ## Custom Hooks
 
 ### `useRouterWithLoader`

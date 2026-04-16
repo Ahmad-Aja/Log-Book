@@ -44,7 +44,16 @@ export function EditStudentModal({
 
   const isLoading = uploadImagePending || updateStudentPending;
 
-  const statusOptions = useMemo(
+  const ALLOWED_TRANSITIONS: Record<StudentStatus, StudentStatus[]> = {
+    [StudentStatus.PENDING]: [StudentStatus.ACTIVE, StudentStatus.REJECTED, StudentStatus.SUSPENDED],
+    [StudentStatus.ACTIVE]: [StudentStatus.SUSPENDED, StudentStatus.GRADUATED, StudentStatus.WITHDRAWN],
+    [StudentStatus.REJECTED]: [StudentStatus.PENDING],
+    [StudentStatus.SUSPENDED]: [StudentStatus.ACTIVE, StudentStatus.WITHDRAWN],
+    [StudentStatus.GRADUATED]: [],
+    [StudentStatus.WITHDRAWN]: [StudentStatus.PENDING],
+  };
+
+  const allStatusOptions = useMemo(
     () => [
       { value: StudentStatus.PENDING, label: tStatus("pending") },
       { value: StudentStatus.ACTIVE, label: tStatus("active") },
@@ -55,6 +64,15 @@ export function EditStudentModal({
     ],
     [tStatus],
   );
+
+  const statusOptions = useMemo(() => {
+    const currentStatus = student?.status;
+    if (!currentStatus) return allStatusOptions;
+    const allowed = ALLOWED_TRANSITIONS[currentStatus];
+    return allStatusOptions.filter(
+      (opt) => opt.value === currentStatus || allowed.includes(opt.value),
+    );
+  }, [student?.status, allStatusOptions]);
 
   const {
     register,
@@ -170,7 +188,7 @@ export function EditStudentModal({
               value={field.value || StudentStatus.PENDING}
               onChange={field.onChange}
               options={statusOptions}
-              disabled={isLoading}
+              disabled={isLoading || ALLOWED_TRANSITIONS[student?.status ?? StudentStatus.PENDING].length === 0}
               error={errors.status?.message}
             />
           )}

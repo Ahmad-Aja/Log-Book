@@ -172,11 +172,11 @@ export function VolunteerActivityTable({
           const title = locale === "ar" ? record.arTitle : record.enTitle;
           const subtitle = locale === "ar" ? record.enTitle : record.arTitle;
           return (
-            <div className="min-w-[150px] text-center w-full">
-              <p className="text-sm font-medium text-gray-900 line-clamp-1">
+            <div className="min-w-[150px] w-full">
+              <p className="text-sm font-medium text-gray-900 overflow-hidden whitespace-nowrap text-ellipsis">
                 <MixedText text={title} />
               </p>
-              <p className="text-xs text-gray-500 line-clamp-1">
+              <p className="text-xs text-gray-500 overflow-hidden whitespace-nowrap text-ellipsis">
                 <MixedText text={subtitle} />
               </p>
             </div>

@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { MixedText } from "@/components/ui/MixedText";
 import { ExternalLink } from "lucide-react";
+import { ImageSlider } from "@/components/ui/ImageSlider";
 import { Modal } from "@/components/ui/Modal";
 import { ModalHeader } from "@/components/ui/ModalHeader";
 import { ModalFooter } from "@/components/ui/ModalFooter";
@@ -76,15 +77,11 @@ export function ViewMedicalCaseModal({
     >
       <ModalHeader title={tModal("viewTitle")} onClose={onClose} sticky />
 
-      <div className="overflow-y-auto flex-1 p-6 space-y-4">
+      <div className="overflow-y-auto flex-1 p-2 space-y-4">
         {/* Case Info */}
         <Section title={t("caseSection")}>
           <DetailViewGrid
             fields={[
-              {
-                label: t("id"),
-                value: <span className="font-mono">#{medicalCase.id}</span>,
-              },
               {
                 label: t("status"),
                 value: (
@@ -95,44 +92,45 @@ export function ViewMedicalCaseModal({
                 ),
               },
               { label: t("publisherRole"), value: roleLabel },
-              { label: t("publisherId"), value: medicalCase.publisherId },
               {
                 label: t("caseDate"),
                 value: new Date(medicalCase.caseDate).toLocaleDateString(),
               },
               {
                 label: t("hospital"),
-                value: medicalCase.hospital || (
+                value: medicalCase.hospital ? (
+                  <MixedText text={medicalCase.hospital} />
+                ) : (
                   <span className="text-gray-400 italic">{t("noHospital")}</span>
                 ),
+                colSpan: 2,
               },
               {
-                label: t("createdAt"),
-                value: new Date(medicalCase.createdAt).toLocaleDateString(),
+                label: t("title"),
+                value: <MixedText text={medicalCase.title} />,
+                colSpan: 2,
+                multiline: true,
+                clamp: false,
               },
               {
-                label: t("updatedAt"),
-                value: new Date(medicalCase.updatedAt).toLocaleDateString(),
+                label: t("description"),
+                value: <MixedText text={medicalCase.description} />,
+                colSpan: 2,
+                multiline: true,
+                clamp: false,
               },
             ]}
           />
         </Section>
 
-        {/* Title */}
-        <Section title={t("title")}>
-          <div className="p-4">
-            <p className="text-sm font-medium text-gray-900"><MixedText text={medicalCase.title} /></p>
-          </div>
-        </Section>
-
-        {/* Description */}
-        <Section title={t("description")}>
-          <div className="p-4">
-            <p className="text-sm text-gray-700 whitespace-pre-wrap leading-relaxed">
-              <MixedText text={medicalCase.description} />
-            </p>
-          </div>
-        </Section>
+        {/* Images */}
+        {medicalCase.images && medicalCase.images.length > 0 && (
+          <Section title={t("images")}>
+            <div className="p-4">
+              <ImageSlider images={medicalCase.images} />
+            </div>
+          </Section>
+        )}
 
         {/* URLs */}
         {medicalCase.urls && medicalCase.urls.length > 0 && (
@@ -147,7 +145,7 @@ export function ViewMedicalCaseModal({
                   className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-800 hover:underline"
                 >
                   <ExternalLink className="w-3.5 h-3.5 flex-shrink-0" />
-                  <span className="truncate">{url}</span>
+                  <MixedText text={url} />
                 </a>
               ))}
             </div>

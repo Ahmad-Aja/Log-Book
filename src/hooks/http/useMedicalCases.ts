@@ -94,6 +94,13 @@ export function useUpdateMedicalCaseStatus() {
   };
 }
 
+export function useUploadMedicalCaseImages() {
+  const { mutateAsync, isPending } = useApiMutation<string[], File[]>(
+    (files) => medicalCaseService.uploadImages(files),
+  );
+  return { uploadImagesMutateAsync: mutateAsync, uploadImagesPending: isPending };
+}
+
 export function useDeleteMedicalCase() {
   const queryClient = useQueryClient();
   const t = useTranslations("medicalCases");

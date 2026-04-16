@@ -45,7 +45,15 @@ export function EditSupervisorModal({
 
   const isLoading = uploadImagePending || updateSupervisorPending;
 
-  const statusOptions = useMemo(
+  const ALLOWED_TRANSITIONS: Record<SupervisorStatus, SupervisorStatus[]> = {
+    [SupervisorStatus.PENDING]: [SupervisorStatus.ACTIVE, SupervisorStatus.REJECTED, SupervisorStatus.SUSPENDED],
+    [SupervisorStatus.ACTIVE]: [SupervisorStatus.SUSPENDED, SupervisorStatus.RETIRED],
+    [SupervisorStatus.REJECTED]: [SupervisorStatus.PENDING],
+    [SupervisorStatus.SUSPENDED]: [SupervisorStatus.ACTIVE, SupervisorStatus.RETIRED],
+    [SupervisorStatus.RETIRED]: [],
+  };
+
+  const allStatusOptions = useMemo(
     () => [
       { value: SupervisorStatus.PENDING, label: tStatus("pending") },
       { value: SupervisorStatus.ACTIVE, label: tStatus("active") },
@@ -55,6 +63,15 @@ export function EditSupervisorModal({
     ],
     [tStatus],
   );
+
+  const statusOptions = useMemo(() => {
+    const currentStatus = supervisor?.status;
+    if (!currentStatus) return allStatusOptions;
+    const allowed = ALLOWED_TRANSITIONS[currentStatus];
+    return allStatusOptions.filter(
+      (opt) => opt.value === currentStatus || allowed.includes(opt.value),
+    );
+  }, [supervisor?.status, allStatusOptions]);
 
   const {
     register,
@@ -172,7 +189,7 @@ export function EditSupervisorModal({
               value={field.value || SupervisorStatus.PENDING}
               onChange={field.onChange}
               options={statusOptions}
-              disabled={isLoading}
+              disabled={isLoading || ALLOWED_TRANSITIONS[supervisor?.status ?? SupervisorStatus.PENDING].length === 0}
               error={errors.status?.message}
             />
           )}

@@ -21,7 +21,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) => {
     const baseStyles =
-      "relative py-2 text-[15px] rounded-md transition-all duration-150 transform hover:scale-[102%] active:scale-95 focus:scale-[102%] focus:outline-none outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100";
+      "relative py-1.5 sm:py-2 text-sm sm:text-[15px] rounded-md transition-all duration-150 transform hover:scale-[102%] active:scale-95 focus:scale-[102%] focus:outline-none outline-none disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100";
 
     const variantStyles = {
       primary:

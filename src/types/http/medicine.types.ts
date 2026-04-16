@@ -16,6 +16,16 @@ export interface Medicine {
   enName: string;
   arDescription: string | null;
   enDescription: string | null;
+  arIndications: string | null;
+  enIndications: string | null;
+  arAdministration: string | null;
+  enAdministration: string | null;
+  arContraindications: string | null;
+  enContraindications: string | null;
+  arMedicineDosages: string | null;
+  enMedicineDosages: string | null;
+  arNotes: string | null;
+  enNotes: string | null;
   status: MedicineStatus;
   categoryId: number;
   category: MedicineCategoryMini;
@@ -28,17 +38,22 @@ export interface Medicine {
 export interface CreateMedicineDto {
   arName: string;
   enName: string;
+  categoryId: number;
   arDescription?: string;
   enDescription?: string;
-  categoryId: number;
+  arIndications?: string;
+  enIndications?: string;
+  arAdministration?: string;
+  enAdministration?: string;
+  arContraindications?: string;
+  enContraindications?: string;
+  arMedicineDosages?: string;
+  enMedicineDosages?: string;
+  arNotes?: string;
+  enNotes?: string;
 }
 
-export interface UpdateMedicineDto {
-  arName?: string;
-  enName?: string;
-  arDescription?: string;
-  enDescription?: string;
-  categoryId?: number;
+export interface UpdateMedicineDto extends Partial<CreateMedicineDto> {
   status?: "APPROVED" | "REJECTED";
 }
 

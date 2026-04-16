@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations, useLocale } from "next-intl";
 import { FormModal } from "@/components/ui/FormModal";
 import { FormField } from "@/components/forms/FormField";
+import { TextareaField } from "@/components/forms/TextareaField";
 import { SearchSelect, SearchSelectOption } from "@/components/ui/SearchSelect";
 import { useCreateMedicine } from "@/hooks/http/useMedicines";
 import { useMedicineCategories } from "@/hooks/http/useMedicineCategories";
@@ -48,7 +49,22 @@ export function AddMedicineModal({ isOpen, onClose }: AddMedicineModalProps) {
     formState: { errors },
   } = useForm<CreateMedicineFormData>({
     resolver: zodResolver(createMedicineSchema(tValidation)),
-    defaultValues: { arName: "", enName: "" },
+    defaultValues: {
+      arName: "",
+      enName: "",
+      arDescription: "",
+      enDescription: "",
+      arIndications: "",
+      enIndications: "",
+      arAdministration: "",
+      enAdministration: "",
+      arContraindications: "",
+      enContraindications: "",
+      arMedicineDosages: "",
+      enMedicineDosages: "",
+      arNotes: "",
+      enNotes: "",
+    },
   });
 
   useEffect(() => {
@@ -68,10 +84,7 @@ export function AddMedicineModal({ isOpen, onClose }: AddMedicineModalProps) {
   }));
 
   const handleFormSubmit = (data: CreateMedicineFormData) => {
-    createMedicineMutate(
-      { arName: data.arName, enName: data.enName, categoryId: data.categoryId },
-      { onSuccess: () => onClose() },
-    );
+    createMedicineMutate(data, { onSuccess: () => onClose() });
   };
 
   return (
@@ -114,6 +127,30 @@ export function AddMedicineModal({ isOpen, onClose }: AddMedicineModalProps) {
           showMoreLabel={t("showMore")}
           error={errors.categoryId?.message}
         />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextareaField label={t("arDescription")} registration={register("arDescription")} disabled={createMedicinePending} />
+          <TextareaField label={t("enDescription")} registration={register("enDescription")} disabled={createMedicinePending} />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextareaField label={t("arIndications")} registration={register("arIndications")} disabled={createMedicinePending} />
+          <TextareaField label={t("enIndications")} registration={register("enIndications")} disabled={createMedicinePending} />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextareaField label={t("arAdministration")} registration={register("arAdministration")} disabled={createMedicinePending} />
+          <TextareaField label={t("enAdministration")} registration={register("enAdministration")} disabled={createMedicinePending} />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextareaField label={t("arContraindications")} registration={register("arContraindications")} disabled={createMedicinePending} />
+          <TextareaField label={t("enContraindications")} registration={register("enContraindications")} disabled={createMedicinePending} />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextareaField label={t("arMedicineDosages")} registration={register("arMedicineDosages")} disabled={createMedicinePending} />
+          <TextareaField label={t("enMedicineDosages")} registration={register("enMedicineDosages")} disabled={createMedicinePending} />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextareaField label={t("arNotes")} registration={register("arNotes")} disabled={createMedicinePending} />
+          <TextareaField label={t("enNotes")} registration={register("enNotes")} disabled={createMedicinePending} />
+        </div>
       </div>
     </FormModal>
   );

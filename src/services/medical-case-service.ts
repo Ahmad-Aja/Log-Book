@@ -70,6 +70,17 @@ class MedicalCaseService {
     return response.data.data;
   }
 
+  async uploadImages(files: File[]): Promise<string[]> {
+    const formData = new FormData();
+    files.forEach((file) => formData.append("images", file));
+    const response = await httpClient.post<ApiResponse<string[]>>(
+      "/medical-special-cases/upload-images",
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } },
+    );
+    return response.data.data;
+  }
+
   async delete(id: number): Promise<void> {
     await httpClient.delete(`/admin/medical-special-cases/${id}`);
   }

@@ -13,6 +13,7 @@ import { ModalHeader } from "@/components/ui/ModalHeader";
 import { ModalFooter } from "@/components/ui/ModalFooter";
 import { Button } from "@/components/ui/Button";
 import { StatusBadge, StatusBadgeColor } from "@/components/ui/StatusBadge";
+import { DetailViewSlot } from "@/components/ui/DetailViewSlot";
 import { SearchSelect, SearchSelectOption } from "@/components/ui/SearchSelect";
 import {
   useProtocol,
@@ -66,7 +67,9 @@ export function ViewProtocolModal({
   const { deleteProtocolMedicineMutate, deleteProtocolMedicinePending } =
     useDeleteProtocolMedicine();
 
-  const [selectedMedicineId, setSelectedMedicineId] = useState<number | null>(null);
+  const [selectedMedicineId, setSelectedMedicineId] = useState<number | null>(
+    null,
+  );
   const [medicineNotes, setMedicineNotes] = useState({ en: "", ar: "" });
   const [medicineSearch, setMedicineSearch] = useState("");
   const [medicineLimit, setMedicineLimit] = useState(PAGE_SIZE);
@@ -154,30 +157,164 @@ export function ViewProtocolModal({
         ) : (
           <>
             {/* Protocol Info */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-xs text-gray-500 mb-1">
-                  {tModal("arTitle")}
-                </p>
-                <p className="text-sm font-medium text-gray-900">
-                  <MixedText text={protocol.arTitle} />
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 mb-1">
-                  {tModal("enTitle")}
-                </p>
-                <p className="text-sm font-medium text-gray-900">
-                  <MixedText text={protocol.enTitle} />
-                </p>
-              </div>
-              <div>
-                <p className="text-xs text-gray-500 mb-1">{tModal("status")}</p>
-                <StatusBadge
-                  color={protocolStatusColor[protocol.status]}
-                  label={statusLabelMap[protocol.status]}
-                  size="md"
+            <div className="grid grid-cols-2 gap-3">
+              <DetailViewSlot
+                label={tModal("arTitle")}
+                value={<MixedText text={protocol.arTitle} />}
+                colSpan={2}
+              />
+              <DetailViewSlot
+                label={tModal("enTitle")}
+                value={<MixedText text={protocol.enTitle} />}
+                colSpan={2}
+              />
+              {protocol.arDescription && (
+                <DetailViewSlot
+                  label={tModal("arDescription")}
+                  value={<MixedText text={protocol.arDescription} />}
+                  multiline
+                  clamp={false}
+                  colSpan={2}
                 />
+              )}
+              {protocol.enDescription && (
+                <DetailViewSlot
+                  label={tModal("enDescription")}
+                  value={<MixedText text={protocol.enDescription} />}
+                  multiline
+                  clamp={false}
+                  colSpan={2}
+                />
+              )}
+              <DetailViewSlot
+                label={tModal("status")}
+                value={
+                  <StatusBadge
+                    color={protocolStatusColor[protocol.status]}
+                    label={statusLabelMap[protocol.status]}
+                    size="md"
+                  />
+                }
+              />
+              {protocol.procedure && (
+                <DetailViewSlot
+                  label={tModal("procedure")}
+                  value={
+                    <MixedText
+                      text={
+                        locale === "ar"
+                          ? protocol.procedure.arName
+                          : protocol.procedure.enName
+                      }
+                    />
+                  }
+                />
+              )}
+            </div>
+
+            {/* Medicines Section */}
+            <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                <h3 className="text-sm font-semibold text-gray-700">
+                  {t("medicinesSection")}
+                </h3>
+              </div>
+              <div className="p-4 space-y-3">
+                {protocol.protocolMedicines &&
+                protocol.protocolMedicines.length > 0 ? (
+                  protocol.protocolMedicines.map((pm) => (
+                    <div
+                      key={pm.id}
+                      className="flex items-start justify-between bg-gray-50 rounded-lg p-3"
+                    >
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-gray-900">
+                          <MixedText
+                            text={
+                              locale === "ar"
+                                ? pm.medicine.arName
+                                : pm.medicine.enName
+                            }
+                          />
+                        </p>
+                        {(pm.arDosageNotes || pm.enDosageNotes) && (
+                          <p className="text-xs text-gray-500 mt-0.5">
+                            <MixedText
+                              text={
+                                locale === "ar"
+                                  ? pm.arDosageNotes
+                                  : pm.enDosageNotes
+                              }
+                            />
+                          </p>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => deleteProtocolMedicineMutate(pm.id)}
+                        disabled={deleteProtocolMedicinePending}
+                        className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
+                        title={t("deleteMedicine")}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-gray-400 text-center py-2">
+                    {t("noMedicines")}
+                  </p>
+                )}
+
+                {/* Add Medicine */}
+                <div className="border border-dashed border-gray-300 rounded-lg p-3 space-y-2">
+                  <p className="text-xs font-medium text-gray-600">
+                    {t("addMedicine")}
+                  </p>
+                  <SearchSelect
+                    placeholder={tModal("medicinePlaceholder")}
+                    searchPlaceholder={tModal("searchMedicinePlaceholder")}
+                    value={selectedMedicineId}
+                    onChange={(val) =>
+                      setSelectedMedicineId(val as number | null)
+                    }
+                    options={medicineOptions}
+                    onSearch={setMedicineSearch}
+                    hasMore={medicines.length < totalMedicines}
+                    onLoadMore={() => setMedicineLimit((l) => l + PAGE_SIZE)}
+                    showMoreLabel={tModal("showMore")}
+                  />
+                  <div className="grid grid-cols-2 gap-2">
+                    <input
+                      type="text"
+                      value={medicineNotes.ar}
+                      onChange={(e) =>
+                        setMedicineNotes((p) => ({ ...p, ar: e.target.value }))
+                      }
+                      placeholder={`${tModal("dosageNotes")} (AR)`}
+                      className="border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:border-wheat"
+                    />
+                    <input
+                      type="text"
+                      value={medicineNotes.en}
+                      onChange={(e) =>
+                        setMedicineNotes((p) => ({ ...p, en: e.target.value }))
+                      }
+                      placeholder={`${tModal("dosageNotes")} (EN)`}
+                      className="border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:border-wheat"
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={handleAddMedicine}
+                    disabled={!selectedMedicineId}
+                    loading={createProtocolMedicinePending}
+                    className="text-xs py-1 px-2 flex items-center justify-center"
+                  >
+                    <Plus className="w-3.5 h-3.5 me-1" />
+                    {t("addMedicine")}
+                  </Button>
+                </div>
               </div>
             </div>
 
@@ -291,110 +428,6 @@ export function ViewProtocolModal({
                     {t("addStep")}
                   </Button>
                 </form>
-              </div>
-            </div>
-
-            {/* Medicines Section */}
-            <div className="border border-gray-200 rounded-lg overflow-hidden">
-              <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
-                <h3 className="text-sm font-semibold text-gray-700">
-                  {t("medicinesSection")}
-                </h3>
-              </div>
-              <div className="p-4 space-y-3">
-                {protocol.protocolMedicines &&
-                protocol.protocolMedicines.length > 0 ? (
-                  protocol.protocolMedicines.map((pm) => (
-                    <div
-                      key={pm.id}
-                      className="flex items-start justify-between bg-gray-50 rounded-lg p-3"
-                    >
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">
-                          <MixedText
-                            text={
-                              locale === "ar"
-                                ? pm.medicine.arName
-                                : pm.medicine.enName
-                            }
-                          />
-                        </p>
-                        {(pm.arDosageNotes || pm.enDosageNotes) && (
-                          <p className="text-xs text-gray-500 mt-0.5">
-                            <MixedText
-                              text={
-                                locale === "ar"
-                                  ? pm.arDosageNotes
-                                  : pm.enDosageNotes
-                              }
-                            />
-                          </p>
-                        )}
-                      </div>
-                      <button
-                        onClick={() => deleteProtocolMedicineMutate(pm.id)}
-                        disabled={deleteProtocolMedicinePending}
-                        className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors"
-                        title={t("deleteMedicine")}
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-sm text-gray-400 text-center py-2">
-                    {t("noMedicines")}
-                  </p>
-                )}
-
-                {/* Add Medicine */}
-                <div className="border border-dashed border-gray-300 rounded-lg p-3 space-y-2">
-                  <p className="text-xs font-medium text-gray-600">
-                    {t("addMedicine")}
-                  </p>
-                  <SearchSelect
-                    placeholder={tModal("medicinePlaceholder")}
-                    searchPlaceholder={tModal("searchMedicinePlaceholder")}
-                    value={selectedMedicineId}
-                    onChange={(val) => setSelectedMedicineId(val as number | null)}
-                    options={medicineOptions}
-                    onSearch={setMedicineSearch}
-                    hasMore={medicines.length < totalMedicines}
-                    onLoadMore={() => setMedicineLimit((l) => l + PAGE_SIZE)}
-                    showMoreLabel={tModal("showMore")}
-                  />
-                  <div className="grid grid-cols-2 gap-2">
-                    <input
-                      type="text"
-                      value={medicineNotes.ar}
-                      onChange={(e) =>
-                        setMedicineNotes((p) => ({ ...p, ar: e.target.value }))
-                      }
-                      placeholder={`${tModal("dosageNotes")} (AR)`}
-                      className="border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:border-wheat"
-                    />
-                    <input
-                      type="text"
-                      value={medicineNotes.en}
-                      onChange={(e) =>
-                        setMedicineNotes((p) => ({ ...p, en: e.target.value }))
-                      }
-                      placeholder={`${tModal("dosageNotes")} (EN)`}
-                      className="border border-gray-300 rounded-md px-2 py-1.5 text-sm focus:outline-none focus:border-wheat"
-                    />
-                  </div>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={handleAddMedicine}
-                    disabled={!selectedMedicineId}
-                    loading={createProtocolMedicinePending}
-                    className="text-xs py-1 px-2 flex items-center justify-center"
-                  >
-                    <Plus className="w-3.5 h-3.5 me-1" />
-                    {t("addMedicine")}
-                  </Button>
-                </div>
               </div>
             </div>
           </>

@@ -199,9 +199,9 @@ export function StudentTable({
       columnHelper.accessor("fullName", {
         header: t("fullName"),
         cell: (info) => (
-          <span className="font-medium text-gray-900 text-sm">
-            <MixedText text={info.getValue()} />
-          </span>
+          <div className="font-medium text-gray-900 text-sm max-w-[200px]">
+            <MixedText text={info.getValue()} truncate />
+          </div>
         ),
         size: 200,
       }),

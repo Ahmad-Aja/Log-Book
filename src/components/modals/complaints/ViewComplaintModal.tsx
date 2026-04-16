@@ -110,12 +110,25 @@ export function ViewComplaintModal({
     );
   };
 
-  const statusOptions = [
+  const ALLOWED_TRANSITIONS: Record<ComplaintStatus, ComplaintStatus[]> = {
+    [ComplaintStatus.PENDING]: [ComplaintStatus.IN_PROGRESS, ComplaintStatus.RESOLVED, ComplaintStatus.CLOSED],
+    [ComplaintStatus.IN_PROGRESS]: [ComplaintStatus.RESOLVED, ComplaintStatus.CLOSED],
+    [ComplaintStatus.RESOLVED]: [ComplaintStatus.IN_PROGRESS, ComplaintStatus.CLOSED],
+    [ComplaintStatus.CLOSED]: [],
+  };
+
+  const allStatusOptions = [
     { value: ComplaintStatus.PENDING, label: tStatus("pending") },
     { value: ComplaintStatus.IN_PROGRESS, label: tStatus("in_progress") },
     { value: ComplaintStatus.RESOLVED, label: tStatus("resolved") },
     { value: ComplaintStatus.CLOSED, label: tStatus("closed") },
   ];
+
+  const statusOptions = complaint
+    ? allStatusOptions.filter((opt) =>
+        ALLOWED_TRANSITIONS[complaint.status].includes(opt.value),
+      )
+    : [];
 
   if (!isOpen) return null;
 
@@ -165,17 +178,15 @@ export function ViewComplaintModal({
             {/* Info */}
             <div className="grid grid-cols-2 gap-3">
               <DetailViewSlot
-                label={tModal("labelId")}
-                value={`#${complaint.id}`}
-              />
-              <DetailViewSlot
-                label={tModal("labelCreatorId")}
-                value={String(complaint.creatorId)}
-              />
-              <DetailViewSlot
                 label={tModal("labelCreatorType")}
                 value={<span className="capitalize">{complaint.creatorType}</span>}
               />
+              {complaint.creatorDetails?.fullName && (
+                <DetailViewSlot
+                  label={tModal("labelCreatorName")}
+                  value={<MixedText text={complaint.creatorDetails.fullName} />}
+                />
+              )}
               <DetailViewSlot
                 label={tModal("labelCreatedAt")}
                 value={new Date(complaint.createdAt).toLocaleDateString()}
@@ -191,23 +202,24 @@ export function ViewComplaintModal({
             </div>
 
             {/* Status Update */}
-            <div className="rounded-lg border border-gray-200 overflow-hidden">
-              <div className="bg-gray-50 px-4 py-2.5 border-b border-gray-200">
+            <div className="rounded-lg border border-gray-200">
+              <div className="bg-gray-50 px-4 py-2.5 border-b border-gray-200 rounded-t-lg">
                 <h3 className="text-sm font-semibold text-gray-700">{tModal("updateStatusTitle")}</h3>
               </div>
               <div className="p-4 flex items-end gap-3">
-                <div className="flex-1">
+                <div className="flex-1 relative z-10">
                   <StatusDropdown
                     label={tModal("statusLabel")}
                     value={selectedStatus}
                     onChange={(val) => setSelectedStatus(val as ComplaintStatus)}
                     options={statusOptions}
-                    disabled={updateComplaintStatusPending}
+                    disabled={updateComplaintStatusPending || complaint.status === ComplaintStatus.CLOSED}
                   />
                 </div>
                 <Button
                   onClick={handleStatusUpdate}
                   loading={updateComplaintStatusPending}
+                  disabled={updateComplaintStatusPending || complaint.status === ComplaintStatus.CLOSED}
                   className="px-4 py-2 shrink-0"
                 >
                   {tModal("updateStatusBtn")}
