@@ -28,11 +28,13 @@ export function DetailViewSlot({
   const isDanger = variant === "danger";
   const baseClasses = multiline
     ? "group p-2 sm:p-3 border border-gray-300 transition-all duration-200 flex flex-col gap-1"
-    : "group p-2 sm:p-3 border border border-gray-300 transition-all duration-200 flex items-center";
+    : "group p-2 sm:p-3 border border-gray-300 transition-all duration-200 flex flex-col sm:flex-row sm:items-center gap-1";
   const variantClasses = isDanger
     ? "border-red-200 hover:border-red-300 hover:shadow-sm bg-red-50/30"
     : "hover:shadow-sm bg-white";
-  const heightClasses = multiline ? "min-h-[36px] sm:min-h-[44px]" : "min-h-[36px] sm:min-h-[44px] lg:h-[44px]";
+  const heightClasses = multiline
+    ? "min-h-[36px] sm:min-h-[44px]"
+    : "min-h-[36px] sm:min-h-[44px] sm:h-[44px]";
 
   // Use colSpan if provided, otherwise fall back to fullWidth
   const shouldSpanTwo = colSpan === 2 || fullWidth;
@@ -44,17 +46,15 @@ export function DetailViewSlot({
       }`}
     >
       <span
-        className={`text-xs sm:text-sm font-medium whitespace-nowrap ${
-          multiline ? "" : "ltr:mr-2 rtl:ml-2"
-        } ${isDanger ? "text-red-600" : "text-wheat"}`}
+        className={`text-xs sm:text-sm font-medium whitespace-nowrap ${isDanger ? "text-red-600" : "text-wheat"}`}
       >
         {label}:
       </span>
       <span
-        className={`text-sm sm:text-base ${
+        className={`text-sm sm:text-base min-w-0 flex-1 ${
           multiline
             ? `whitespace-pre-wrap break-words ${clamp ? "max-h-24 overflow-y-auto" : ""}`
-            : "truncate"
+            : "break-words sm:truncate"
         } ${isDanger ? "text-red-700" : "text-gray-900"} ${className}`}
       >
         {value}

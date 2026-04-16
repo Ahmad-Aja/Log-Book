@@ -50,8 +50,8 @@ export function ViewMedicineModal({
   };
 
   const fields = [
-    { label: tModal("arName"), value: <MixedText text={medicine.arName} /> },
-    { label: tModal("enName"), value: <MixedText text={medicine.enName} /> },
+    { label: tModal("arName"), value: <MixedText text={medicine.arName} />, colSpan: 2 as const },
+    { label: tModal("enName"), value: <MixedText text={medicine.enName} />, colSpan: 2 as const },
     {
       label: tModal("category"),
       value: (

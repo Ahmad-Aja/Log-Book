@@ -39,10 +39,12 @@ export function ViewMedicineCategoryModal({
     {
       label: tModal("arName"),
       value: <MixedText text={category.arName} />,
+      colSpan: 2 as const,
     },
     {
       label: tModal("enName"),
       value: <MixedText text={category.enName} />,
+      colSpan: 2 as const,
     },
     {
       label: tModal("status"),

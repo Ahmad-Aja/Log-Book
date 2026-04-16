@@ -43,6 +43,7 @@ export interface Complaint {
   messages: ComplaintMessage[];
   createdAt: string;
   updatedAt: string;
+  creatorDetails?: { fullName: string };
 }
 
 export interface ComplaintSummary {
