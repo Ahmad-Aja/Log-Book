@@ -47,9 +47,9 @@ const studentStatusColor: Record<StudentStatus, StatusBadgeColor> = {
 };
 import { ViewStudentModal } from "../modals/students/ViewStudentModal";
 import { EditStudentModal } from "../modals/students/EditStudentModal";
+import { StudentReportModal } from "../modals/students/StudentReportModal";
 import { ConfirmDialog } from "../ui/ConfirmDialog";
 import { useBlockStudent, useUnblockStudent } from "@/hooks/http/useStudents";
-import { studentService } from "@/services/student-service";
 
 interface StudentTableProps {
   data: Student[];
@@ -88,6 +88,7 @@ export function StudentTable({
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isBlockDialogOpen, setIsBlockDialogOpen] = useState(false);
   const [isUnblockDialogOpen, setIsUnblockDialogOpen] = useState(false);
 
@@ -107,25 +108,9 @@ export function StudentTable({
     [tStatus],
   );
 
-  const [downloadingId, setDownloadingId] = useState<number | null>(null);
-
-  const handleDownloadReport = async (student: Student) => {
-    setDownloadingId(student.id);
-    try {
-      const blob = await studentService.downloadReport(student.id);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `student-report-${student.universityId}.pdf`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch {
-      // error handled by interceptor
-    } finally {
-      setDownloadingId(null);
-    }
+  const handleViewReport = (student: Student) => {
+    setSelectedStudent(student);
+    setIsReportModalOpen(true);
   };
 
   // Action handlers
@@ -276,16 +261,11 @@ export function StudentTable({
                 <HandHeart className="w-4 h-4" />
               </button>
               <button
-                onClick={() => handleDownloadReport(student)}
-                disabled={downloadingId === student.id}
-                className="p-1.5 text-teal-600 hover:bg-teal-50 rounded-md transition-colors disabled:opacity-50"
-                title={t("downloadReport")}
+                onClick={() => handleViewReport(student)}
+                className="p-1.5 text-teal-600 hover:bg-teal-50 rounded-md transition-colors"
+                title={t("viewReport")}
               >
-                {downloadingId === student.id ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <FileDown className="w-4 h-4" />
-                )}
+                <FileDown className="w-4 h-4" />
               </button>
               {isBlocked ? (
                 <button
@@ -548,6 +528,12 @@ export function StudentTable({
       <EditStudentModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
+        student={selectedStudent}
+      />
+
+      <StudentReportModal
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
         student={selectedStudent}
       />
 

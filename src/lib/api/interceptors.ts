@@ -35,7 +35,11 @@ export function setupInterceptors(axiosInstance: AxiosInstance) {
       if (error.response?.status === 401) {
         const locale = getLocaleFromCookie();
         document.cookie = `access_token=; path=/; max-age=0`;
-        window.location.href = `/${locale}/login`;
+        const loginPath = `/${locale}/login`;
+        // Check if we're not already on the login page to avoid redirect loop
+        if (!window.location.pathname.includes("/login")) {
+          window.location.href = loginPath;
+        }
       }
       return Promise.reject(error);
     },

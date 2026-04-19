@@ -11,6 +11,7 @@ import { PaginationMeta } from "@/types/http/auth.types";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { toast } from "@/lib/toast";
+import { AxiosError } from "axios";
 
 export function useUploadStudentImage() {
   const { mutate, isPending, error } = useApiMutation<string, File>((file) =>
@@ -152,6 +153,21 @@ export function useStudentStatistics() {
   return {
     statistics: data,
     isLoading,
+    error,
+  };
+}
+
+export function useStudentReport() {
+  const { mutate, data, isPending, error } = useApiMutation<
+    string,
+    number,
+    AxiosError<{ message: string }>
+  >((studentId) => studentService.downloadReport(studentId));
+
+  return {
+    generateReport: mutate,
+    reportContent: data,
+    isLoading: isPending,
     error,
   };
 }

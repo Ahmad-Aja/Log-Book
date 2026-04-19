@@ -8,7 +8,11 @@ import {
   StudentFilters,
   StudentStatistics,
 } from "@/types/http/student.types";
-import { ApiResponse, PaginatedApiResponse, PaginationMeta } from "@/types/http/auth.types";
+import {
+  ApiResponse,
+  PaginatedApiResponse,
+  PaginationMeta,
+} from "@/types/http/auth.types";
 
 class StudentService {
   async uploadImage(file: File): Promise<string> {
@@ -63,8 +67,7 @@ class StudentService {
       ? `/admin/students?${queryString}`
       : "/admin/students";
 
-    const response =
-      await httpClient.get<PaginatedApiResponse<Student[]>>(url);
+    const response = await httpClient.get<PaginatedApiResponse<Student[]>>(url);
     return { data: response.data.data, pagination: response.data.pagination };
   }
 
@@ -104,10 +107,9 @@ class StudentService {
     return response.data.data;
   }
 
-  async downloadReport(studentId: number): Promise<Blob> {
-    const response = await httpClient.get<Blob>(
+  async downloadReport(studentId: number): Promise<string> {
+    const response = await httpClient.get<string>(
       `/admin/statistics-and-reports/students/${studentId}/report`,
-      { responseType: "blob" },
     );
     return response.data;
   }
